@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace elasticscheduler
 {
@@ -14,17 +15,44 @@ namespace elasticscheduler
         public void schdeulerInsertion()
         {
 
+
+            XDocument doc = XDocument.Load(@"c:\es_scheduler_config.xml");
+
+            string elasticsearchhost = doc.Descendants("field")
+                                          .Where(node => (string)node.Attribute("name") == "elasticsearchhost")
+                                          .Select(node => node.Value.ToString()).FirstOrDefault();
+            
+
             WriteToFile("ElasticSearch Scheduler starts at {0}");
-            ConnectionSettings connectionSettings = new ConnectionSettings(new Uri(ConfigurationManager.AppSettings["elasticsearchhost"])); //local PC            
+            ConnectionSettings connectionSettings = new ConnectionSettings(new Uri(elasticsearchhost)); //local PC            
             ElasticClient elasticClient = new ElasticClient(connectionSettings);
 
             try
             {
-                string sourcepath_bslash = ConfigurationManager.AppSettings["sourcepath_bslash"]; //path
-                string sourcepath_fslash = ConfigurationManager.AppSettings["sourcepath_fslash"];//path_tomove
+                string sourcepath_bslash = doc.Descendants("field")
+                                            .Where(node => (string)node.Attribute("name") == "sourcepath_bslash")
+                                            .Select(node => node.Value.ToString()).FirstOrDefault();
+
+
+                string sourcepath_fslash = doc.Descendants("field")
+                                           .Where(node => (string)node.Attribute("name") == "sourcepath_fslash")
+                                           .Select(node => node.Value.ToString()).FirstOrDefault();
+
+                string destinationfoldername = doc.Descendants("field")
+                                           .Where(node => (string)node.Attribute("name") == "destinationfoldername")
+                                           .Select(node => node.Value.ToString()).FirstOrDefault();
+
+
+                string indexname = doc.Descendants("field")
+                                           .Where(node => (string)node.Attribute("name") == "indexname")
+                                           .Select(node => node.Value.ToString()).FirstOrDefault();
+                
+                string documenttype = doc.Descendants("field")
+                                           .Where(node => (string)node.Attribute("name") == "documenttype")
+                                           .Select(node => node.Value.ToString()).FirstOrDefault();
 
                 string rootFolderPath = sourcepath_fslash;
-                string destinationPath = sourcepath_fslash + ConfigurationManager.AppSettings["destinationfoldername"];
+                string destinationPath = sourcepath_fslash + destinationfoldername;
 
                 List<string> list = new List<string>();
                 System.IO.DriveInfo di = new System.IO.DriveInfo(sourcepath_bslash);
@@ -46,8 +74,8 @@ namespace elasticscheduler
                 foreach (string filename in list)
                 {
                     var response = elasticClient.Search<dynamic>(s => s
-                     .Index(ConfigurationManager.AppSettings["indexname"])
-                      .Type(ConfigurationManager.AppSettings["documenttype"])
+                     .Index(indexname)
+                      .Type(documenttype)
                      .Query(q => q.Term("path", sourcepath_bslash + filename)))
                      ;
                     foreach (var hit in response.Hits)
