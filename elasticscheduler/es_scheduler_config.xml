@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<row>
+  <field name="sourcepath_bslash">D:/elk1/JSON_DATA/Archive/</field>
+  <field name="sourcepath_fslash">D:\elk1\JSON_DATA\Archive\</field>
+  <field name="destinationfoldername">\Moved\</field>
+  <field name="indexname">index_c0673285-b8e4-4aab-a8d2-90c8b9d7eec3</field>
+  <field name="documenttype">car</field>
+  <field name="elasticsearchhost">http://localhost:9200/</field>
+  <field name="schedulertime">1</field>
+</row>

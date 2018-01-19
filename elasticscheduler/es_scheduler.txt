@@ -1,0 +1,4 @@
+ElasticSearch Scheduler starts at 19-01-2018 08:13:45 PM
+ElasticSearch Scheduler end at 19-01-2018 08:13:46 PM . Files Moved : 0
+
+---------------------------------------------------------------------------------

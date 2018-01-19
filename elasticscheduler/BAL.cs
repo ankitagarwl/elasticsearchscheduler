@@ -14,9 +14,10 @@ namespace elasticscheduler
     {
         public void schdeulerInsertion()
         {
-
-
-            XDocument doc = XDocument.Load(@"c:\es_scheduler_config.xml");
+            
+            string newPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\"));
+            string path = Path.Combine(newPath, "es_scheduler_config.xml");
+            XDocument doc = XDocument.Load(path);
 
             string elasticsearchhost = doc.Descendants("field")
                                           .Where(node => (string)node.Attribute("name") == "elasticsearchhost")
@@ -130,7 +131,10 @@ namespace elasticscheduler
 
         private static void WriteToFile(string text)
         {
-            string path = "D:\\es_scheduler.txt";
+            
+            string newPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\"));
+            string path = Path.Combine(newPath, "es_scheduler.txt");
+            
             using (StreamWriter writer = new StreamWriter(path, true))
             {
                 writer.WriteLine(string.Format(text, DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt")));
